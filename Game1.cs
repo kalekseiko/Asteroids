@@ -13,7 +13,7 @@ namespace AsteroidMono
     // Состояния игры
     enum States
     {
-        SplashScreen,
+        SplashScreen, 
         Game,
         Final,
         Pause
