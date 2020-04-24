@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SourceFile>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/fonts/TextFont.spritefont</SourceFile>
+  <SourceTime>2020-04-23T11:50:16.6296131+04:00</SourceTime>
+  <DestFile>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/bin/Windows/Content/fonts/TextFont.xnb</DestFile>
+  <DestTime>2020-04-23T11:51:05.1311621+04:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2018-12-08T20:35:54+04:00</ImporterTime>
+  <Processor>FontDescriptionProcessor</Processor>
+  <ProcessorTime>2018-12-08T20:35:54+04:00</ProcessorTime>
+  <Parameters>
+    <Key>PremultiplyAlpha</Key>
+    <Value>True</Value>
+  </Parameters>
+  <Parameters>
+    <Key>TextureFormat</Key>
+    <Value>Compressed</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

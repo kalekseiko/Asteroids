@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/fonts/File.spritefont</File>
+    <File>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/fonts/TextFont.spritefont</File>
+    <File>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/img/AsteroidsMainMenu.jpg</File>
+    <File>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/img/AsteroidsMainMenu2.jpg</File>
+    <File>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/spriteMaps/1Star.png</File>
+    <File>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/spriteMaps/Backgrounds.png</File>
+    <File>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/spriteMaps/spaceship.png</File>
+    <File>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/spriteMaps/SpriteMapStars.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File>fonts/SplashScreenFont</File>
+    <File>fonts/TextFont</File>
+    <File>img/SplashScreenImg</File>
+    <File>img/SplashScreenImg2</File>
+    <File>spriteMaps/starImg</File>
+    <File>spriteMaps/Backgrounds</File>
+    <File>spriteMaps/spaceship</File>
+    <File>spriteMaps/SpriteMapStars</File>
+  </DestFiles>
+</SourceFileCollection>
