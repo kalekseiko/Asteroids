@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Code",
+    "\\Content"
   ],
+  "SelectedNode": "\\Code\\Asteroids.cs",
   "PreviewInSolutionExplorer": false
 }

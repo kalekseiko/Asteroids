@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/spriteMaps/Backgrounds.png</SourceFile>
-  <SourceTime>2020-04-24T11:44:36.7967445+04:00</SourceTime>
-  <DestFile>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/bin/Windows/spriteMaps/Backgrounds.xnb</DestFile>
-  <DestTime>2020-04-24T11:45:12.8789146+04:00</DestTime>
+  <SourceFile>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/Backgrounds.png</SourceFile>
+  <SourceTime>2020-04-27T16:07:34.7183762+04:00</SourceTime>
+  <DestFile>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/spriteMaps/Backgrounds.xnb</DestFile>
+  <DestTime>2020-04-27T16:07:38.7265849+04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T20:35:54+04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

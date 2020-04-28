@@ -36,7 +36,7 @@ namespace AsteroidMono
             currentBackground = rnd.Next(0, backgrounds.Length);
             for (int i = 0; i < backgrounds.Length; i++)
             {
-                backgrounds[i] = new Background(new Vector2(rnd.Next(0, screenWidth), 0), new Vector2(-1, 0), 0, i);
+                backgrounds[i] = new Background(new Vector2(screenWidth, 0), new Vector2(-1, 0), 0, i);
             }
 
             starsNear = new Star[50];
@@ -44,17 +44,17 @@ namespace AsteroidMono
             for (int i = 0; i < starsNear.Length; i++)
             {
                 if (spriteY >= 15) spriteY = 0; else spriteY++;
-                starsNear[i] = new Star(new Vector2(-rnd.Next(4, 10), 0), 0, spriteY);
+                starsNear[i] = new Star(new Vector2(-1, -1), new Vector2(-rnd.Next(4, 10), 0), 0, spriteY);
             }
             starsFar = new Star[200];
             spriteY = 16;
             for (int i = 0; i < starsFar.Length; i++)
             {
                 if (spriteY >= 24) spriteY = 0; else spriteY++;
-                starsFar[i] = new Star(new Vector2(-rnd.Next(1, 4), 0), 0, spriteY);
+                starsFar[i] = new Star(new Vector2(-1, -1), new Vector2(-rnd.Next(1, 4), 0), 0, spriteY);
             }
 
-            StarShip1 = new StarShip(new Vector2(20, screenHeight / 2 - 36), 5);
+            StarShip1 = new StarShip(new Vector2(20, screenHeight / 2 - 36), new Vector2(0,0), 0, 0, 5);
         }
 
         static public void Draw()
@@ -71,168 +71,183 @@ namespace AsteroidMono
 
         static public void Update()
         {
-            float PosX = backgrounds[currentBackground].Update();
-            //Console.WriteLine(PosX);
-            if (PosX < 0 )
+            if (backgrounds[currentBackground].ChangeSprite )
             {
                 currentBackground = rnd.Next(0, backgrounds.Length);
-            } else
-            {
-                backgrounds[currentBackground].Update();
             }
-
-
+            backgrounds[currentBackground].Update();
+            
             foreach (Star star in starsNear)
                 star.Update();
             foreach (Star star in starsFar)
                 star.Update();
+
+            StarShip1.Update();
         }
     }
 
-    class Star
+    
+    abstract class BasedObject
     {
-        Vector2 Pos; // позиция: x и y
-        Vector2 Dir; // направление движения
-        Color color = Color.FromNonPremultiplied(255, 255, 255, 255);
+        protected Vector2 Pos; // текущая позиция (x и y)
+        protected Vector2 Dir; // направление движения
 
-        Point currentFrame;
-        Point spriteSize = new Point(1, 1);
-        // размеры фрейма на спрайтовой карте
-        int frameWidth = 16; 
-        int frameHeight = 16; 
+        protected Color color; // как ни странно это цвет спрайта
         
+        // Спрайты
+        protected Point currentFrame; 
+        protected Point spriteSize;
+        // размеры фрейма на спрайтовой карте
+        protected int frameWidth = 16; 
+        protected int frameHeight = 16; 
+
+        // конструктор
+        protected BasedObject(Vector2 pos, Vector2 dir, int spriteX, int spriteY) 
+        {
+            Pos = pos;
+            Dir = dir;
+            color = Color.FromNonPremultiplied(255, 255, 255, 255); // по умолчанию белый
+            spriteSize = new Point(1, 1);
+            currentFrame = new Point(spriteX, spriteY);
+            frameWidth = 16;
+            frameHeight = 16;
+        }
+ 
+        // логика (например перемещение) объекта
+        public abstract void Update();
+        //public abstract float Update();
+        // отрисовка объекта
+        public abstract void Draw();
+    }
+
+    class Star: BasedObject
+    {
 
         public static Texture2D Texture2D { get; set; }
 
-        public Star(Vector2 Pos, Vector2 Dir)
+        public Star(Vector2 pos, Vector2 dir, int spriteX, int spriteY)
+            :base (pos, dir, spriteX, spriteY)
         {
-            this.Pos = Pos;
-            this.Dir = Dir;
+            if ((pos.X < 0) || (pos.Y < 0))
+                Pos = RandomSet(true);
+            else 
+                Pos = pos;
         }
 
-        public Star(Vector2 Dir, int spriteX, int spriteY)
-        {
-            this.Dir = Dir;
-            RandomSet(true);
-            currentFrame = new Point(spriteX, spriteY);
-        }
-
-        public void Update()
+        public override void Update()
         {
             Pos += Dir;
-
             if (Pos.X < 0)
             {
-                RandomSet();
+                Pos = RandomSet();
             }
         }
 
-        public void RandomSet(bool firstGen = false)
-        {
-            if (firstGen)
-            {
-                Pos = new Vector2(Asteroids.GetIntRnd(0, Asteroids.screenWidth), Asteroids.GetIntRnd(0, Asteroids.screenHeight));
-            } else
-            {
-                Pos = new Vector2(Asteroids.GetIntRnd(Asteroids.screenWidth, Asteroids.screenWidth + 300), Asteroids.GetIntRnd(0, Asteroids.screenHeight));
-            }
-            color = Color.FromNonPremultiplied(255, 255, 255, 255);
-        }
-
-        public void Draw()
+        public override void Draw()
         {
             Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
         }
 
+        Vector2 RandomSet(bool firstGen = false)
+        {
+            if (firstGen)
+            {
+                return new Vector2(Asteroids.GetIntRnd(0, Asteroids.screenWidth), Asteroids.GetIntRnd(0, Asteroids.screenHeight));
+            } else
+            {
+                return new Vector2(Asteroids.GetIntRnd(Asteroids.screenWidth, Asteroids.screenWidth + 300), Asteroids.GetIntRnd(0, Asteroids.screenHeight));
+            }
+        }
+
     }
 
-    class Background
+    class Background: BasedObject
     {
-        Vector2 Pos; // позиция: x и y
-        Vector2 Dir; // направление движения
-
-        Point currentFrame;
-        Point spriteSize = new Point(1, 1);
-        // размеры фрейма на спрайтовой карте
-        int frameWidth = Asteroids.screenWidth;
-        int frameHeight = Asteroids.screenHeight;
+        public bool ChangeSprite {get; set; }
 
         public static Texture2D Texture2D { get; set; }
 
-        public Background(Vector2 Pos, Vector2 Dir, int spriteX, int spriteY)
+        public Background(Vector2 pos, Vector2 dir, int spriteX, int spriteY)
+            :base (pos, dir, spriteX, spriteY)
         {
-            this.Pos = Pos;
-            this.Dir = Dir;
-            currentFrame = new Point(spriteX, spriteY);
+            frameWidth = 400;
+            frameHeight = 250;
+            ChangeSprite = false;
+            Pos.Y -= 10; // Корректировка из-за масштабирования
         }
 
-        public float Update()
+         public override void Update()
         {
             Pos += Dir;
-            float posXRight = Pos.X + Asteroids.screenWidth;
-            if (posXRight < 0)
+            if ((Pos.X + Asteroids.screenWidth) < 0)
             {
                 Pos.X = Asteroids.screenWidth;
-            }
-            return posXRight;
+                ChangeSprite = true;
+            } else 
+                ChangeSprite = false;
         }
 
-        public void Draw()
+        public override void Draw()
         {
-            Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 4.4f, SpriteEffects.None, 0);
         }
     }
 
 
-    class StarShip
+    class StarShip: BasedObject
     {
-        Vector2 Pos; // позиция: x и y
         public int Speed { get; set; }
 
         public static Texture2D Texture2D { get; set; }
 
-        public StarShip(Vector2 Pos, int speed)
+        public StarShip(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
+            :base (pos, dir, spriteX, spriteY)
         {
-            this.Pos = Pos;
-            this.Speed = speed;
+            Speed = speed;
+            frameWidth = 64;
+            frameHeight = 73;
         }
+
+        public virtual Vector2 GetPosForFire => new Vector2(Pos.X, Pos.Y);
 
         public void Up()
         {
             if ((this.Pos.Y) > 0)
             {
-                this.Pos.Y -= Speed;
+                this.Dir.Y -= Speed;
             }
         }
         public void Down()
         {
             if (this.Pos.Y < (Asteroids.screenHeight-Texture2D.Height))
             {
-                this.Pos.Y += Speed;
+                this.Dir.Y += Speed;
             }
         }
         public void Left()
         {
             if (this.Pos.X > 0)
             {
-                this.Pos.X -= Speed;
+                this.Dir.X -= Speed;
             }
         }
         public void Right()
         {
             if (this.Pos.X < (Asteroids.screenWidth-Texture2D.Width))
             {
-                this.Pos.X += Speed;
+                this.Dir.X += Speed;
             }
         }
 
-        public void Draw()
+
+        public override void Update()
         {
-            Asteroids.SpriteBatch.Draw(Texture2D, Pos, Color.White);
+            Pos += Dir;
+            Dir = new Vector2(0, 0);
         }
-
-
-
+        public override void Draw()
+        {
+            Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+        }
     }
-
 }
