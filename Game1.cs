@@ -86,6 +86,7 @@ namespace AsteroidMono
             Background.Texture2D = Content.Load<Texture2D>("spriteMaps/Backgrounds");
             Star.Texture2D = Content.Load<Texture2D>("spriteMaps/SpriteMapStars");
             StarShip.Texture2D = Content.Load<Texture2D>("spriteMaps/spaceship");
+            Fire.Texture2D = Content.Load<Texture2D>("spriteMaps/PlazmaBullet");
 
 
 
@@ -111,10 +112,6 @@ namespace AsteroidMono
             KeyboardState keyboardState = Keyboard.GetState();
             switch(stat)
             {
-                case States.SplashScreen:
-                    SplashScreen.Update();
-                    if (keyboardState.IsKeyDown(Keys.Space)) stat = States.Game;
-                    break;
                 case States.Game:
                     if (keyboardState.IsKeyDown(Keys.Escape)) stat = States.SplashScreen;
                     Asteroids.Update();
@@ -122,7 +119,17 @@ namespace AsteroidMono
                     if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) Asteroids.StarShip1.Down();
                     if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A)) Asteroids.StarShip1.Left();
                     if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D)) Asteroids.StarShip1.Right();
+                    if (keyboardState.IsKeyDown(Keys.Space)) Asteroids.Shoot();
+                    if (keyboardState.IsKeyUp(Keys.Space)) Asteroids.fireTimerCounter = 0;
                     break;
+                case States.SplashScreen:
+                    SplashScreen.Update();
+                    if (keyboardState.IsKeyDown(Keys.Space)) 
+                        {
+                            stat = States.Game;
+                        }
+                    break;
+                
             }
 
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))

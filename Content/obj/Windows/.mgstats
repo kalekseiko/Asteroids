@@ -1,4 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/1Star.png","D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/spriteMaps/starImg.xnb","TextureProcessor","Texture2DContent",228,1109,0
-"D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/Backgrounds.png","D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/spriteMaps/Backgrounds.xnb","TextureProcessor","Texture2DContent",249376,1200085,0,1537264
+"D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/Plazma_bullet.png","D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/spriteMaps/PlazmaBullet.xnb","TextureProcessor","Texture2DContent",12176,199205,0,5291896
 "D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/spaceship.png","D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/spriteMaps/spaceship.xnb","TextureProcessor","Texture2DContent",7395,18773,0

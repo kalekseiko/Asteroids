@@ -85,7 +85,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:spriteMaps/Plazma_bullet.png;spriteMaps/Plazma_bullet
+/build:spriteMaps/Plazma_bullet.png;spriteMaps/PlazmaBullet
 
 #begin spriteMaps/spaceship.png
 /importer:TextureImporter

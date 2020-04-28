@@ -21,7 +21,7 @@
     <File>img/SplashScreenImg2</File>
     <File>spriteMaps/starImg</File>
     <File>spriteMaps/Backgrounds</File>
-    <File>spriteMaps/Plazma_bullet</File>
+    <File>spriteMaps/PlazmaBullet</File>
     <File>spriteMaps/spaceship</File>
     <File>spriteMaps/SpriteMapStars</File>
   </DestFiles>

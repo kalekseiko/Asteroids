@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace AsteroidMono
 {
+    // сама игра будет обрабатываться в этом классе
     class Asteroids
     {
         public static int screenWidth;
@@ -18,14 +20,11 @@ namespace AsteroidMono
         static Star[] starsFar;
 
         static public StarShip StarShip1 { get; set; }
-        
-        
- 
-        static public int GetIntRnd(int min, int max)
-        {
-            return rnd.Next(min, max);
-        }
 
+        static public List<Fire> firesList { get; set; }
+        static public int fireTimerCounter = 0; // костыль ограничивающий количество выстрелов при нажатии срельбы игроком
+
+        // инициализация
         static public void Init (SpriteBatch SpriteBatch, int Width, int Height)
         {
             Asteroids.screenWidth = (Width > 100) ? Width : Game1.ScreenWidth;
@@ -55,20 +54,11 @@ namespace AsteroidMono
             }
 
             StarShip1 = new StarShip(new Vector2(20, screenHeight / 2 - 36), new Vector2(0,0), 0, 0, 5);
+            
+            firesList = new List<Fire>();
         }
 
-        static public void Draw()
-        {
-            backgrounds[currentBackground].Draw();
-
-            foreach (Star star in starsNear)
-                star.Draw();
-            foreach (Star star in starsFar)
-                star.Draw();
-
-            StarShip1.Draw();
-        }
-
+        // обновление состояния игровых объектов
         static public void Update()
         {
             if (backgrounds[currentBackground].ChangeSprite )
@@ -82,14 +72,60 @@ namespace AsteroidMono
             foreach (Star star in starsFar)
                 star.Update();
 
+            foreach (Fire shoot in firesList) 
+            {
+                if (shoot.CanHide == false)
+                    shoot.Update();
+            }
+
             StarShip1.Update();
+        }
+        // отрисовка
+        static public void Draw()
+        {
+            backgrounds[currentBackground].Draw();
+
+            foreach (Star star in starsNear)
+                star.Draw();
+            foreach (Star star in starsFar)
+                star.Draw();
+
+            foreach (Fire shoot in firesList) 
+            {
+                if (shoot.CanHide == false)
+                    shoot.Draw();
+            }
+
+            StarShip1.Draw();
+        }
+
+        /*
+         *  **********\/ ОСТАЛЬНЫЕ МЕТОДЫ \/**********
+        */
+        
+        // генератор ПСЧ
+        static public int GetIntRnd(int min, int max)
+        {
+            return rnd.Next(min, max);
+        }
+        // выстрел корабля
+        static public void Shoot() 
+        {
+            fireTimerCounter++;
+                if (fireTimerCounter == 1 )
+                    firesList.Add(new Fire(StarShip1.GetPosForFire, new Vector2(0, 0), 0, 0, 30));
+            Console.WriteLine(fireTimerCounter);
         }
     }
 
-    
+    /*
+     *  **********\/ ИГРОВЫЕ ОБЪЕКТЫ \/**********
+    */    
+
+    // Абстрактный класс на основе которого будем создавать остальные классы
     abstract class BasedObject
     {
-        protected Vector2 Pos; // текущая позиция (x и y)
+        public Vector2 Pos; // текущая позиция (x и y)
         protected Vector2 Dir; // направление движения
 
         protected Color color; // как ни странно это цвет спрайта
@@ -208,7 +244,7 @@ namespace AsteroidMono
             frameHeight = 73;
         }
 
-        public virtual Vector2 GetPosForFire => new Vector2(Pos.X, Pos.Y);
+        public Vector2 GetPosForFire => new Vector2(Pos.X, Pos.Y);
 
         public void Up()
         {
@@ -250,4 +286,38 @@ namespace AsteroidMono
             Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
         }
     }
+
+    class Fire: BasedObject 
+    {
+        // Hide = true спрятать и не просчитывать этот высрел 
+        public bool CanHide {set; get;}
+        int speed; // скоростиь полета снаряда
+
+        public static Texture2D Texture2D { get; set; }
+        
+        
+        public Fire(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
+            :base (pos, dir, spriteX, spriteY)
+        {
+            this.speed = speed;
+            Dir.X = speed;
+            CanHide = false;
+            frameWidth = 76;
+            frameHeight = 76;
+        }
+
+        public override void Update()
+        {
+            Pos += Dir;
+            if (Pos.X > Asteroids.screenWidth) 
+            {
+                CanHide = true;
+            }
+        }
+        public override void Draw()
+        {
+            Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+        }
+    }
+
 }
