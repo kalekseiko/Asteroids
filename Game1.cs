@@ -87,6 +87,7 @@ namespace AsteroidMono
             Star.Texture2D = Content.Load<Texture2D>("spriteMaps/SpriteMapStars");
             StarShip.Texture2D = Content.Load<Texture2D>("spriteMaps/spaceship");
             Fire.Texture2D = Content.Load<Texture2D>("spriteMaps/PlazmaBullet");
+            Asteroid.Texture2D = Content.Load<Texture2D>("spriteMaps/Asteroids");
 
 
 

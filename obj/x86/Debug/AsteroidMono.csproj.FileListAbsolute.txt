@@ -70,3 +70,4 @@ D:\geekBrains\C#2\AsteroidMono\Asteroids\obj\x86\Debug\AsteroidMono.exe
 D:\geekBrains\C#2\AsteroidMono\Asteroids\obj\x86\Debug\AsteroidMono.pdb
 D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\spriteMaps\Plazma_bullet.xnb
 D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\spriteMaps\PlazmaBullet.xnb
+D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\spriteMaps\Asteroids.xnb

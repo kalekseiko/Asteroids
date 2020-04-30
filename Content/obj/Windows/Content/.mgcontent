@@ -9,6 +9,7 @@
     <File>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/img/AsteroidsMainMenu.jpg</File>
     <File>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/img/AsteroidsMainMenu2.jpg</File>
     <File>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/1Star.png</File>
+    <File>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/Asteroids.png</File>
     <File>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/Backgrounds.png</File>
     <File>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/Plazma_bullet.png</File>
     <File>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/spaceship.png</File>
@@ -20,6 +21,7 @@
     <File>img/SplashScreenImg</File>
     <File>img/SplashScreenImg2</File>
     <File>spriteMaps/starImg</File>
+    <File>spriteMaps/Asteroids</File>
     <File>spriteMaps/Backgrounds</File>
     <File>spriteMaps/PlazmaBullet</File>
     <File>spriteMaps/spaceship</File>

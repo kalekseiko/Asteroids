@@ -22,7 +22,9 @@ namespace AsteroidMono
         static public StarShip StarShip1 { get; set; }
 
         static public List<Fire> firesList { get; set; }
-        static public int fireTimerCounter = 0; // костыль ограничивающий количество выстрелов при нажатии срельбы игроком
+        static public int fireTimerCounter = 0; // костыль ограничивающий количество выстрелов при нажатии срельбы игроком (для одиночного выстрела)
+
+        static public Asteroid[] asteroidsArray;
 
         // инициализация
         static public void Init (SpriteBatch SpriteBatch, int Width, int Height)
@@ -56,6 +58,13 @@ namespace AsteroidMono
             StarShip1 = new StarShip(new Vector2(20, screenHeight / 2 - 36), new Vector2(0,0), 0, 0, 5);
             
             firesList = new List<Fire>();
+
+            asteroidsArray = new Asteroid[10];
+            for (int i = 0; i < asteroidsArray.Length; i++)
+            {
+                if (spriteY >= 6) spriteY = 0; else spriteY++;
+                asteroidsArray[i] = new Asteroid(new Vector2(GetIntRnd(screenWidth, screenWidth + 300), GetIntRnd(64, screenHeight - 64)), new Vector2(0,0), GetIntRnd(0, 6), 0, GetIntRnd(3, 6));
+            }
         }
 
         // обновление состояния игровых объектов
@@ -71,15 +80,32 @@ namespace AsteroidMono
                 star.Update();
             foreach (Star star in starsFar)
                 star.Update();
-
+            foreach (Asteroid asteroid in asteroidsArray) 
+            {
+                asteroid.Update();
+                foreach (Fire shoot in firesList) 
+                {
+                    if (shoot.CanHide == false) 
+                    {
+                        if (asteroid.Collision(shoot)) 
+                        {
+                            shoot.Destroy();
+                            asteroid.Destroy();
+                        }
+                    }
+                }
+            }
+            //Console.WriteLine("W = " + asteroidsArray[0].Size.X + " | H = " + asteroidsArray[0].Size.Y );
+            
             foreach (Fire shoot in firesList) 
             {
                 if (shoot.CanHide == false)
                     shoot.Update();
-            }
 
+            }
             StarShip1.Update();
         }
+
         // отрисовка
         static public void Draw()
         {
@@ -89,7 +115,8 @@ namespace AsteroidMono
                 star.Draw();
             foreach (Star star in starsFar)
                 star.Draw();
-
+            foreach (Asteroid asteroid in asteroidsArray)
+                asteroid.Draw();
             foreach (Fire shoot in firesList) 
             {
                 if (shoot.CanHide == false)
@@ -114,8 +141,15 @@ namespace AsteroidMono
             fireTimerCounter++;
                 if (fireTimerCounter == 1 )
                     firesList.Add(new Fire(StarShip1.GetPosForFire, new Vector2(0, 0), 0, 0, 30));
-            Console.WriteLine(fireTimerCounter);
         }
+    }
+
+
+    // Интерфейс в котором мы реализуем столкновения объектов
+    interface ICollision
+    {
+        bool Collision (ICollision obj);
+        Rectangle Rect {get;}
     }
 
     /*
@@ -123,7 +157,7 @@ namespace AsteroidMono
     */    
 
     // Абстрактный класс на основе которого будем создавать остальные классы
-    abstract class BasedObject
+    abstract class BasedObject : ICollision
     {
         public Vector2 Pos; // текущая позиция (x и y)
         protected Vector2 Dir; // направление движения
@@ -135,7 +169,8 @@ namespace AsteroidMono
         protected Point spriteSize;
         // размеры фрейма на спрайтовой карте
         protected int frameWidth = 16; 
-        protected int frameHeight = 16; 
+        protected int frameHeight = 16;
+        public Vector2 Size; 
 
         // конструктор
         protected BasedObject(Vector2 pos, Vector2 dir, int spriteX, int spriteY) 
@@ -147,6 +182,8 @@ namespace AsteroidMono
             currentFrame = new Point(spriteX, spriteY);
             frameWidth = 16;
             frameHeight = 16;
+            Size.X = frameWidth;
+            Size.Y = frameHeight;
         }
  
         // логика (например перемещение) объекта
@@ -154,6 +191,10 @@ namespace AsteroidMono
         //public abstract float Update();
         // отрисовка объекта
         public abstract void Draw();
+
+        // Столкновения
+        public bool Collision (ICollision o) => o.Rect.Intersects(this.Rect);
+        public Rectangle Rect => new Rectangle((int)Pos.X + 4, (int)Pos.Y + 4, (int)Size.X, (int)Size.Y);
     }
 
     class Star: BasedObject
@@ -302,8 +343,18 @@ namespace AsteroidMono
             this.speed = speed;
             Dir.X = speed;
             CanHide = false;
-            frameWidth = 76;
-            frameHeight = 76;
+            frameWidth = 224;
+            frameHeight = 48;
+            currentFrame.X = spriteX;
+            currentFrame.Y = 0;
+            Size.X = frameWidth - 8;
+            Size.Y = frameHeight - 8;
+        }
+
+        public void Destroy()
+        {
+           Pos.X = Asteroids.screenWidth + 10;
+           CanHide = true;
         }
 
         public override void Update()
@@ -316,7 +367,72 @@ namespace AsteroidMono
         }
         public override void Draw()
         {
+            currentFrame.Y = (currentFrame.Y > 4) ? 0:currentFrame.Y+1;
             Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+        }
+    }
+
+    class Asteroid: BasedObject 
+    {
+        int speed; // скоростиь полета астероида
+
+        public static Texture2D Texture2D { get; set; }
+
+        bool destroyMode;
+        int frameX;
+        
+        
+        public Asteroid(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
+            :base (pos, dir, spriteX, spriteY)
+        {
+            this.speed = speed;
+            Dir.X = speed;
+            frameWidth = 64;
+            frameHeight = 64;
+            Size.X = frameWidth - 8;
+            Size.Y = frameHeight - 8;
+            currentFrame.X = spriteX;
+            currentFrame.Y = spriteY;
+            frameX = currentFrame.X;
+        }
+
+        public override void Update()
+        {
+            Pos -= Dir;
+            if (destroyMode) {
+                currentFrame.Y = 1;
+                currentFrame.X++;
+                if (currentFrame.X > 7) 
+                {
+                    currentFrame.X = frameX;
+                    currentFrame.Y = 0;
+                    destroyMode = false;
+                    Pos = RandomSet();
+                }
+            }
+            else 
+            {
+                if (Pos.X + frameWidth < 0) 
+                {
+                    Pos = RandomSet();
+                }
+            }
+        }
+
+        public void Destroy()
+        {
+            destroyMode = true;
+            currentFrame.X = 0;
+        }
+
+        public override void Draw()
+        {
+            Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+        }
+
+         Vector2 RandomSet()
+        {
+            return new Vector2(Asteroids.GetIntRnd(Asteroids.screenWidth, Asteroids.screenWidth + 300), Asteroids.GetIntRnd(frameWidth, Asteroids.screenHeight-frameWidth));
         }
     }
 
