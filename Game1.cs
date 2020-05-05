@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using AsteroidMono;
+
 
 namespace AsteroidMono
 {
@@ -19,8 +21,6 @@ namespace AsteroidMono
         Pause
     }
 
-    //Глобальные для игры параметры
-    int StarShipStrength = 100; // кораблиные жизни
 
     public class Game1 : Game
     {
@@ -46,8 +46,6 @@ namespace AsteroidMono
                 return screenHeight;
             }
         }
-
-
 
         public Game1()
         {
@@ -81,10 +79,12 @@ namespace AsteroidMono
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             SplashScreen.Background = Content.Load<Texture2D>("img/SplashScreenImg2"); // картинка для заставки
             SplashScreen.HeaderFont = Content.Load<SpriteFont>("fonts/SplashScreenFont"); // шрифт для главных надписей
             SplashScreen.TextFont = Content.Load<SpriteFont>("fonts/TextFont"); // шрифт для остальных надписей
+            GameOverStat.TextFont = Content.Load<SpriteFont>("fonts/TextFont"); // шрифт для остальных надписей
+            
             Asteroids.Init(spriteBatch, screenWidth, screenHeight);
             Background.Texture2D = Content.Load<Texture2D>("spriteMaps/Backgrounds");
             Star.Texture2D = Content.Load<Texture2D>("spriteMaps/SpriteMapStars");
@@ -146,8 +146,6 @@ namespace AsteroidMono
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed )
                 Exit();
 
-            
-
             base.Update(gameTime);
         }
 
@@ -167,12 +165,12 @@ namespace AsteroidMono
                 case States.Game:
                     Asteroids.Draw();
                     break;
+                case States.GameOver:
+                    GameOverStat.Draw();
+                    break;
             }
+            GameOverStat.Draw();
 
-
-            
-            //spriteBatch.Draw(mainMenu, new Vector2(0, 0), Color.White); // способ добавления картинки если картинка в точности совпвдвет с размером окна
-            //spriteBatch.Draw(mainMenu, new Rectangle(0, 0, screenWidth, 1050), Color.White); // подгоняем картинку под размер окна
             spriteBatch.End();
 
             base.Draw(gameTime);
