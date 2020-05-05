@@ -87,6 +87,18 @@
 /processorParam:TextureFormat=Color
 /build:spriteMaps/Backgrounds.png;spriteMaps/Backgrounds
 
+#begin spriteMaps/blast.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spriteMaps/blast.png;spriteMaps/blast
+
 #begin spriteMaps/Plazma_bullet.png
 /importer:TextureImporter
 /processor:TextureProcessor

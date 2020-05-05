@@ -15,9 +15,12 @@ namespace AsteroidMono
     {
         SplashScreen,
         Game,
-        Final,
+        GameOver,
         Pause
     }
+
+    //Глобальные для игры параметры
+    int StarShipStrength = 100; // кораблиные жизни
 
     public class Game1 : Game
     {
@@ -86,11 +89,9 @@ namespace AsteroidMono
             Background.Texture2D = Content.Load<Texture2D>("spriteMaps/Backgrounds");
             Star.Texture2D = Content.Load<Texture2D>("spriteMaps/SpriteMapStars");
             StarShip.Texture2D = Content.Load<Texture2D>("spriteMaps/spaceship");
-            Fire.Texture2D = Content.Load<Texture2D>("spriteMaps/PlazmaBullet");
+            BigFire.Texture2D = Content.Load<Texture2D>("spriteMaps/PlazmaBullet");
             Asteroid.Texture2D = Content.Load<Texture2D>("spriteMaps/Asteroids");
-
-
-
+            Blast.Texture2D = Content.Load<Texture2D>("spriteMaps/blast");
             // TODO: use this.Content to load your game content here
         }
 
@@ -130,6 +131,14 @@ namespace AsteroidMono
                             stat = States.Game;
                         }
                     break;
+                case States.GameOver:
+                    SplashScreen.Update();
+                    if (keyboardState.IsKeyDown(Keys.Space)) 
+                        {
+                            stat = States.Game;
+                        }
+                    break;
+                    
                 
             }
 
