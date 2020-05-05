@@ -72,3 +72,5 @@ D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\spriteMap
 D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\spriteMaps\PlazmaBullet.xnb
 D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\spriteMaps\Asteroids.xnb
 D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\spriteMaps\blast.xnb
+D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\img\GameOver.xnb
+D:\geekBrains\C#2\AsteroidMono\Asteroids\bin\Windows\x86\Debug\Content\fonts\LittleFont.xnb

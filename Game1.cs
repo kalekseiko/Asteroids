@@ -83,7 +83,9 @@ namespace AsteroidMono
             SplashScreen.Background = Content.Load<Texture2D>("img/SplashScreenImg2"); // картинка для заставки
             SplashScreen.HeaderFont = Content.Load<SpriteFont>("fonts/SplashScreenFont"); // шрифт для главных надписей
             SplashScreen.TextFont = Content.Load<SpriteFont>("fonts/TextFont"); // шрифт для остальных надписей
-            GameOverStat.TextFont = Content.Load<SpriteFont>("fonts/TextFont"); // шрифт для остальных надписей
+            GameOver.Background = Content.Load<Texture2D>("img/GameOver"); // картинка для заставки
+            GameOver.HeaderFont = Content.Load<SpriteFont>("fonts/TextFont"); // шрифт для главных надписей
+            GameOver.TextFont = Content.Load<SpriteFont>("fonts/LittleFont"); // шрифт для остальных надписей
             
             Asteroids.Init(spriteBatch, screenWidth, screenHeight);
             Background.Texture2D = Content.Load<Texture2D>("spriteMaps/Backgrounds");
@@ -123,6 +125,10 @@ namespace AsteroidMono
                     if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D)) Asteroids.StarShip1.Right();
                     if (keyboardState.IsKeyDown(Keys.Space)) Asteroids.Shoot();
                     if (keyboardState.IsKeyUp(Keys.Space)) Asteroids.fireTimerCounter = 0;
+
+                    if (Asteroids.StarShip1.Strength < 1 ) {
+                        stat=States.GameOver;
+                    }
                     break;
                 case States.SplashScreen:
                     SplashScreen.Update();
@@ -132,9 +138,10 @@ namespace AsteroidMono
                         }
                     break;
                 case States.GameOver:
-                    SplashScreen.Update();
+                    GameOver.Update();
                     if (keyboardState.IsKeyDown(Keys.Space)) 
                         {
+                            Asteroids.StarShip1.Strength = 100;
                             stat = States.Game;
                         }
                     break;
@@ -166,10 +173,10 @@ namespace AsteroidMono
                     Asteroids.Draw();
                     break;
                 case States.GameOver:
-                    GameOverStat.Draw();
+                    GameOver.Draw(spriteBatch);
                     break;
             }
-            GameOverStat.Draw();
+            
 
             spriteBatch.End();
 

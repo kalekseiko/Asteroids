@@ -6,24 +6,25 @@ using System; // для отладки
 namespace AsteroidMono
 {
     // класс для отображения заставки игры
-    static class GameOver
+    public static class GameOver
     {
         public static Texture2D Background { get; set; } // картинка для заставки
         static int timeCounter = 0;
         enum TimeCounterStatuses : int { Up, Down };
         static TimeCounterStatuses timeCounterStat = TimeCounterStatuses.Up;
-        static Vector2 headerTextPosition = new Vector2(350, 50); // координаты главной надписи
-        static Vector2 textPosition = new Vector2(350, 200); // координаты надписи "Нажмите пробел для начала игры"
 
         static Color colorText;
         public static SpriteFont HeaderFont { get; set; }
         public static SpriteFont TextFont { get; set; }
 
+        static Vector2 headerTextPosition = new Vector2(50, 50); // координаты главной надписи
+        static Vector2 textPosition = new Vector2(50, 100); // координаты дополнительной надписи
+
         static public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Background, Vector2.Zero, Color.White); // отрисовываем картинку
-            spriteBatch.DrawString(HeaderFont, "Asteroids!", headerTextPosition, Color.FromNonPremultiplied(124, 123, 62, 255)); // отрисовываем надпись
-            spriteBatch.DrawString(TextFont, "Нажмите пробел для старта игры...", textPosition, colorText); // отрисовываем надпись
+            spriteBatch.DrawString(HeaderFont, "Вы проиграли", headerTextPosition, Color.DarkOrange); // отрисовываем надпись
+            spriteBatch.DrawString(TextFont, "Но вы можете нажать пробел и продолжить играть...", textPosition, colorText); // отрисовываем надпись
 
         }
 
@@ -48,8 +49,6 @@ namespace AsteroidMono
             {
                 timeCounter--;
             }
-
-            //Console.WriteLine(timeCounter);
         }
 
     }

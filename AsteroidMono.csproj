@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Code\Asteroids.cs" />
     <Compile Include="Code\SplashScreen.cs" />
+    <Compile Include="Code\GameOver.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
