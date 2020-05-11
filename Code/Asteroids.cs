@@ -70,6 +70,30 @@ namespace AsteroidMono
             blast = new Blast(new Vector2(0, 0), new Vector2(0, 0), 0, 0);
         }
 
+        // перезапуск игры (например после проигрыша)
+         static public void Reset ()
+         {
+            for (int i = 0; i < backgrounds.Length; i++)
+            {
+                backgrounds[i].Reset(new Vector2(screenWidth, 0), new Vector2(-1, 0));
+            }
+            for (int i = 0; i < starsNear.Length; i++)
+            {
+                starsNear[i].Reset();
+            }
+            for (int i = 0; i < starsFar.Length; i++)
+            {
+                starsFar[i].Reset();
+            }
+            StarShip1.Reset();
+            firesList.Clear();
+            for (int i = 0; i < asteroidsArray.Length; i++)
+            {
+                asteroidsArray[i].Reset(new Vector2(GetIntRnd(screenWidth, screenWidth + 300), GetIntRnd(64, screenHeight - 64)), new Vector2(0,0));
+            }
+            blast.Reset();
+         }
+
         // обновление состояния игровых объектов
         static public void Update()
         {
@@ -184,7 +208,7 @@ namespace AsteroidMono
     // Абстрактный класс на основе которого будем создавать остальные классы
     abstract class BasedObject : ICollision
     {
-        public Vector2 Pos; // текущая позиция (x и y)
+        protected Vector2 Pos; // текущая позиция (x и y)
         protected Vector2 Dir; // направление движения
 
         protected Color color; // как ни странно это цвет спрайта
@@ -239,6 +263,11 @@ namespace AsteroidMono
                 Pos = pos;
         }
 
+        public void Reset()
+        {
+            Pos = RandomSet(true);
+        }
+
         public override void Update()
         {
             Pos += Dir;
@@ -281,6 +310,14 @@ namespace AsteroidMono
             Pos.Y -= 10; // Корректировка из-за масштабирования
         }
 
+        public void Reset(Vector2 pos, Vector2 dir)
+        {
+            Pos = pos;
+            Dir = dir;
+            ChangeSprite = false;
+            Pos.Y -= 10;
+        }
+
          public override void Update()
         {
             Pos += Dir;
@@ -302,6 +339,9 @@ namespace AsteroidMono
     class StarShip: BasedObject
     {
         public int Speed { get; set; }
+        
+        Vector2 StartPos;
+        Vector2 StartDir;
 
         public static Texture2D Texture2D { get; set; }
 
@@ -311,6 +351,8 @@ namespace AsteroidMono
         public StarShip(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
             :base (pos, dir, spriteX, spriteY)
         {
+            StartPos = pos;
+            StartDir = dir;
             Speed = speed;
             frameWidth = 64;
             frameHeight = 73;
@@ -318,6 +360,13 @@ namespace AsteroidMono
             currentFrame.Y = spriteY;
             size.W = frameWidth - sizeCoef;
             size.H = frameHeight - sizeCoef;
+            Strength = 100;
+        }
+
+        public void Reset ()
+        {
+            Pos = StartPos;
+            Dir = StartDir;
             Strength = 100;
         }
 
@@ -393,7 +442,6 @@ namespace AsteroidMono
 
         public static Texture2D Texture2D { get; set; }
         
-        
         public BigFire(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
             :base (pos, dir, spriteX, spriteY)
         {
@@ -446,6 +494,12 @@ namespace AsteroidMono
             size.H = frameHeight - sizeCoef;
             currentFrame.X = spriteX;
             currentFrame.Y = spriteY;
+        }
+
+        public void Reset(Vector2 pos, Vector2 dir)
+        {
+            Dir = pos;
+            Pos = dir;
         }
 
         public Vector2 GetDir () 
@@ -512,7 +566,7 @@ namespace AsteroidMono
         
     }
 
-    class Blast: BasedObject 
+    class Blast: BasedObject
     {
 
         bool isShow;
@@ -526,6 +580,11 @@ namespace AsteroidMono
             frameHeight = 64;
             currentFrame.X = spriteX;
             currentFrame.Y = spriteY;
+            isShow = false;
+        }
+
+        public void Reset() 
+        {
             isShow = false;
         }
 

@@ -174,6 +174,7 @@ namespace AsteroidMono
                     break;
                 case States.GameOver:
                     GameOver.Draw(spriteBatch);
+                    Asteroids.Reset();
                     break;
             }
             
