@@ -1,4 +1,2 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/fonts/LittleFont.spritefont","D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/fonts/LittleFont.xnb","FontDescriptionProcessor","SpriteFontContent",2200,40849,0,4466309
 "D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/1Star.png","D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/spriteMaps/starImg.xnb","TextureProcessor","Texture2DContent",228,1109,0
-"D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/spriteMaps/spaceship.png","D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/spriteMaps/spaceship.xnb","TextureProcessor","Texture2DContent",7395,18773,0

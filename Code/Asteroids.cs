@@ -20,6 +20,7 @@ namespace AsteroidMono
         static Star[] starsFar;
 
         static public StarShip StarShip1 { get; set; }
+        static public SustainerEngine SustainerEngine1 { get; set; }
 
         static public List<BigFire> firesList { get; set; }
         static public int fireTimerCounter = 0; // костыль ограничивающий количество выстрелов при нажатии срельбы игроком (для одиночного выстрела)
@@ -58,6 +59,7 @@ namespace AsteroidMono
             }
 
             StarShip1 = new StarShip(new Vector2(20, screenHeight / 2 - 36), new Vector2(0,0), 0, 0, 5);
+            SustainerEngine1 = new SustainerEngine(StarShip1.GetPos, new Vector2(0,0), 0, 0);
             
             firesList = new List<BigFire>();
 
@@ -135,7 +137,6 @@ namespace AsteroidMono
                         asteroidsArray[j].AsterroidCollide(TempVector2);
                     }
                 }
-
             }
             
             foreach (BigFire shoot in firesList) 
@@ -145,6 +146,8 @@ namespace AsteroidMono
 
             }
             StarShip1.Update();
+            SustainerEngine1.SetPos(StarShip1.GetPos);
+            SustainerEngine1.Update();
             blast.Update();
         }
 
@@ -166,6 +169,7 @@ namespace AsteroidMono
             }
 
             StarShip1.Draw();
+            SustainerEngine1.Draw();
             blast.Draw();
         }
 
@@ -183,7 +187,7 @@ namespace AsteroidMono
         {
             fireTimerCounter++;
                 if (fireTimerCounter == 1 )
-                    firesList.Add(new BigFire(StarShip1.GetPosForFire, new Vector2(0, 0), 0, 0, 30));
+                    firesList.Add(new BigFire(StarShip1.GetPos, new Vector2(0, 0), 0, 0, 30));
         }
     }
 
@@ -345,8 +349,12 @@ namespace AsteroidMono
 
         public static Texture2D Texture2D { get; set; }
 
-        // HP корабля
-        public int Strength {get; set;}
+        // игровые параметры корабля
+        public int Strength {get; set;} // жизни корабля
+        public int Fuel {get; }         // топливо / запас воды для движения
+        public int MainEnergy {get;}    // энергия реактора
+        public int Сharge {get;}        // заряд накопителей корабля (для оружия щитов и т.д.)
+
 
         public StarShip(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
             :base (pos, dir, spriteX, spriteY)
@@ -354,8 +362,8 @@ namespace AsteroidMono
             StartPos = pos;
             StartDir = dir;
             Speed = speed;
-            frameWidth = 64;
-            frameHeight = 73;
+            frameWidth = 126;
+            frameHeight = 90;
             currentFrame.X = spriteX;
             currentFrame.Y = spriteY;
             size.W = frameWidth - sizeCoef;
@@ -370,7 +378,7 @@ namespace AsteroidMono
             Strength = 100;
         }
 
-        public Vector2 GetPosForFire => new Vector2(Pos.X, Pos.Y);
+        public Vector2 GetPos => new Vector2(Pos.X, Pos.Y);
 
         public void Up()
         {
@@ -430,7 +438,45 @@ namespace AsteroidMono
         {
             Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
             Asteroids.SpriteBatch.DrawString(SplashScreen.TextFont, Strength.ToString(), new Vector2(10, Asteroids.screenHeight-50), color); // отрисовываем HP
+        }
+    }
 
+    // анимация пламени маршевого двигателя
+    class SustainerEngine: BasedObject 
+    {
+        public static Texture2D Texture2D { get; set; }
+
+        public bool isOn;
+
+        public SustainerEngine(Vector2 pos, Vector2 dir, int spriteX, int spriteY)
+            :base (pos, dir, spriteX, spriteY)
+        {
+            frameWidth = 64;
+            frameHeight = 32;
+            currentFrame.X = spriteX;
+            currentFrame.Y = spriteY;
+            isOn = true;
+        }
+        public void SetPos(Vector2 pos)
+        {
+            Pos.X = pos.X-96;
+            Pos.Y = pos.Y+23;
+        }
+
+        public override void Update()
+        {
+            if (currentFrame.Y < 4)
+                currentFrame.Y++;
+            else
+                currentFrame.Y = 0;
+
+            isOn = true;
+        }
+
+        public override void Draw()
+        {
+            if (isOn)
+                Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1.5f, SpriteEffects.None, 0);
         }
     }
 
@@ -445,6 +491,8 @@ namespace AsteroidMono
         public BigFire(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
             :base (pos, dir, spriteX, spriteY)
         {
+            Pos.X = pos.X;
+            Pos.Y = pos.Y + 17;
             this.speed = speed;
             Dir.X = speed;
             CanHide = false;
