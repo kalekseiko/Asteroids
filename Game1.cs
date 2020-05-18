@@ -124,6 +124,7 @@ namespace AsteroidMono
         protected override void Update(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
+            MouseState mouseState = Mouse.GetState();
             switch(stat)
             {
                 case States.Game:
@@ -137,8 +138,8 @@ namespace AsteroidMono
                         Asteroids.SustainerEngine1.isOn = false;
                     }
                     if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D)) Asteroids.StarShip1.Right();
-                    if (keyboardState.IsKeyDown(Keys.Space)) Asteroids.Shoot();
-                    if (keyboardState.IsKeyUp(Keys.Space)) Asteroids.fireTimerCounter = 0;
+                    if ((keyboardState.IsKeyDown(Keys.Space)) || (mouseState.LeftButton == ButtonState.Pressed)) Asteroids.Shoot();
+                    if ((keyboardState.IsKeyUp(Keys.Space)) && (mouseState.LeftButton == ButtonState.Released)) Asteroids.fireTimerCounter = 0;
 
                     if (Asteroids.StarShip1.Strength < 1 ) {
                         stat=States.GameOver;
@@ -146,7 +147,7 @@ namespace AsteroidMono
                     break;
                 case States.SplashScreen:
                     SplashScreen.Update();
-                    if (keyboardState.IsKeyDown(Keys.Space)) 
+                    if (keyboardState.IsKeyDown(Keys.Space) || (mouseState.LeftButton == ButtonState.Pressed))
                         {
                             stat = States.Game;
                         }

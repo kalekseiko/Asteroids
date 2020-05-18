@@ -23,7 +23,7 @@ namespace AsteroidMono
         {
             spriteBatch.Draw(Background, Vector2.Zero, Color.White); // отрисовываем картинку
             spriteBatch.DrawString(HeaderFont, "Asteroids!", headerTextPosition, Color.FromNonPremultiplied(124, 123, 62, 255)); // отрисовываем надпись
-            spriteBatch.DrawString(TextFont, "Нажмите пробел для старта игры...", textPosition, colorText); // отрисовываем надпись
+            spriteBatch.DrawString(TextFont, "Нажмите пробел или левую кнопку мышки для старта игры...", textPosition, colorText); // отрисовываем надпись
 
         }
 
