@@ -100,7 +100,7 @@ namespace AsteroidMono
             Background.Texture2D = Content.Load<Texture2D>("spriteMaps/Backgrounds");
             Star.Texture2D = Content.Load<Texture2D>("spriteMaps/SpriteMapStars");
             StarShip.Texture2D = Content.Load<Texture2D>("spriteMaps/spaceship");
-            SustainerEngine.Texture2D = Content.Load<Texture2D>("spriteMaps/JetStreamSprite");
+            Engine.Texture2D = Content.Load<Texture2D>("spriteMaps/JetStreamSprite");
             BigFire.Texture2D = Content.Load<Texture2D>("spriteMaps/PlazmaBullet");
             Asteroid.Texture2D = Content.Load<Texture2D>("spriteMaps/Asteroids");
             Blast.Texture2D = Content.Load<Texture2D>("spriteMaps/blast");
@@ -135,7 +135,6 @@ namespace AsteroidMono
                     if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A)) 
                     {
                         Asteroids.StarShip1.Left();
-                        Asteroids.SustainerEngine1.isOn = false;
                     }
                     if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D)) Asteroids.StarShip1.Right();
                     if ((keyboardState.IsKeyDown(Keys.Space)) || (mouseState.LeftButton == ButtonState.Pressed)) Asteroids.Shoot();

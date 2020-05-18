@@ -20,8 +20,13 @@ namespace AsteroidMono
         static Star[] starsNear;
         static Star[] starsFar;
 
-        static public StarShip StarShip1 { get; set; }
-        static public SustainerEngine SustainerEngine1 { get; set; }
+        static public StarShip StarShip1;
+
+        static public Engine SustainerEngine;
+        static public Engine leftTopEngine;
+        static public Engine rightTopEngine;
+        static public Engine leftBottomEngine;
+        static public Engine rightBottomEngine;
 
         static public List<BigFire> firesList { get; set; }
         static public int fireTimerCounter = 0; // костыль ограничивающий количество выстрелов при нажатии срельбы игроком (для одиночного выстрела)
@@ -67,8 +72,13 @@ namespace AsteroidMono
                 starsFar[i] = new Star(new Vector2(-1, -1), new Vector2(-rnd.Next(1, 4), 0), 0, spriteY);
             }
 
-            StarShip1 = new StarShip(new Vector2(20, screenHeight / 2 - 36), new Vector2(0,0), 0, 0, 5);
-            SustainerEngine1 = new SustainerEngine(StarShip1.GetPos, new Vector2(0,0), 0, 0);
+            SustainerEngine = new Engine(new Vector2(-96,23), new Vector2(0,0), 0, 0, 0f, 1.5f, true);
+            leftTopEngine = new Engine(new Vector2(10, -26), new Vector2(0,0), 0, 0, 0.78f, 0.5f);
+            rightTopEngine = new Engine(new Vector2(89, -16), new Vector2(0,0), 0, 0, 2.3f, 0.5f);
+            leftBottomEngine = new Engine(new Vector2(0, 108), new Vector2(0,0), 0, 0, 5.4f, 0.5f);
+            rightBottomEngine = new Engine(new Vector2(81, 116), new Vector2(0,0), 0, 0, 3.9f, 0.5f);
+
+            StarShip1 = new StarShip(new Vector2(20, screenHeight / 2 - 36), new Vector2(0,0), 0, 0, 5, SustainerEngine, leftTopEngine, rightTopEngine, leftBottomEngine, rightBottomEngine);
             
             firesList = new List<BigFire>();
 
@@ -157,8 +167,19 @@ namespace AsteroidMono
 
             }
             StarShip1.Update();
-            SustainerEngine1.SetPos(StarShip1.GetPos);
-            SustainerEngine1.Update();
+
+            SustainerEngine.SetPos(StarShip1.GetPos);
+            leftTopEngine.SetPos(StarShip1.GetPos);
+            rightTopEngine.SetPos(StarShip1.GetPos);
+            leftBottomEngine.SetPos(StarShip1.GetPos);
+            rightBottomEngine.SetPos(StarShip1.GetPos);
+
+            SustainerEngine.Update();
+            leftTopEngine.Update();
+            rightTopEngine.Update();
+            leftBottomEngine.Update();
+            rightBottomEngine.Update();
+            
             blast.Update();
         }
 
@@ -180,7 +201,12 @@ namespace AsteroidMono
             }
 
             StarShip1.Draw();
-            SustainerEngine1.Draw();
+            SustainerEngine.Draw();
+            leftTopEngine.Draw();
+            rightTopEngine.Draw();
+            leftBottomEngine.Draw();
+            rightBottomEngine.Draw();
+
             blast.Draw();
         }
 
@@ -366,14 +392,21 @@ namespace AsteroidMono
 
         public static Texture2D Texture2D { get; set; }
 
+        Engine sustainerEngine;
+        Engine leftTop;
+        Engine rightTop;
+        Engine leftBottom;
+        Engine rightBottom;
+
         // игровые параметры корабля
         public int Strength {get; set;} // жизни корабля
-        public int Fuel {get; }         // топливо / запас воды для движения
+        /*public int Fuel {get; }         // топливо / запас воды для движения
         public int MainEnergy {get;}    // энергия реактора
-        public int Сharge {get;}        // заряд накопителей корабля (для оружия щитов и т.д.)
+        public int Сharge {get;}        // заряд накопителей корабля (для оружия щитов и т.д.)*/
 
 
-        public StarShip(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
+        public StarShip(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed, 
+                        Engine sustainerEngine, Engine leftTop, Engine rightTop, Engine leftBottom, Engine rightBottom)
             :base (pos, dir, spriteX, spriteY)
         {
             StartPos = pos;
@@ -386,6 +419,11 @@ namespace AsteroidMono
             size.W = frameWidth - sizeCoef;
             size.H = frameHeight - sizeCoef;
             Strength = 100;
+            this.sustainerEngine = sustainerEngine;
+            this.leftTop = leftTop;
+            this.rightTop = rightTop;
+            this.leftBottom = leftBottom;
+            this.rightBottom = rightBottom;
         }
 
         public void Reset ()
@@ -400,18 +438,28 @@ namespace AsteroidMono
         public void Up()
         {
                 this.Dir.Y -= Speed;
+                leftBottom.isOn = true;
+                rightBottom.isOn = true;
         }
         public void Down()
         {
                 this.Dir.Y += Speed;
+                leftTop.isOn = true;
+                rightTop.isOn = true;
+
         }
         public void Left()
         {
                 this.Dir.X -= Speed;
+                sustainerEngine.isOn = false;
+                rightBottom.isOn = true;
+                rightTop.isOn = true;
         }
         public void Right()
         {
                 this.Dir.X += Speed;
+                leftBottom.isOn = true;
+                leftTop.isOn = true;
         }
 
         public Vector2 Collide() 
@@ -458,21 +506,29 @@ namespace AsteroidMono
         }
     }
 
-    // анимация пламени маршевого двигателя
-    class SustainerEngine: BasedObject 
+    // анимация пламени двигателя
+    class Engine: BasedObject 
     {
+        // Pos относительно космического корабля
+        Vector2 localPos;
+        
         public static Texture2D Texture2D { get; set; }
+        float rotate;
+        float scale;
 
         public bool isOn {get; set;}
         bool IsIgnition;
+        bool permaWork; // по умолчанию включенный/выключенный двигатель
 
         // Для ограничения скорости анимации
-        int currentTime; // сколько времени прошло
-        int period; // период обновления в миллисекундах
+        int animSpeed = 50; // скорость анимации (чем больше число тем медленнее анимация)
+        int currentTime;
+        int period;
        
-        public SustainerEngine(Vector2 pos, Vector2 dir, int spriteX, int spriteY)
+        public Engine(Vector2 pos, Vector2 dir, int spriteX, int spriteY, float rotate=0, float scale=1f, bool permaWork=false)
             :base (pos, dir, spriteX, spriteY)
         {
+            localPos = pos;
             frameWidth = 64;
             frameHeight = 32;
             currentFrame.X = spriteX;
@@ -480,12 +536,16 @@ namespace AsteroidMono
             isOn = true;
             IsIgnition = true;
             currentTime = 0;
-            period = 50;
+            period = animSpeed; 
+            this.rotate = rotate; 
+            this.scale = scale; 
+            this.permaWork = permaWork;
         }
+
         public void SetPos(Vector2 pos)
         {
-            Pos.X = pos.X-96;
-            Pos.Y = pos.Y+23;
+            Pos.X = pos.X+localPos.X;
+            Pos.Y = pos.Y+localPos.Y;
         }
 
         public override void Update()
@@ -496,10 +556,12 @@ namespace AsteroidMono
             {
                 currentTime -= period;
                 if (IsIgnition) 
-                {
+                { 
+                    period = animSpeed * 3;
                     currentFrame.X = 1;
                 } else 
                 {
+                    period = animSpeed;
                     currentFrame.X = 0;
                 }
 
@@ -515,14 +577,14 @@ namespace AsteroidMono
 
                 if (!isOn) IsIgnition = true;
 
-                isOn = true;
+                isOn = permaWork ? true : false;
             }
         }
 
         public override void Draw()
         {
             if (isOn)
-                Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1.5f, SpriteEffects.None, 0);
+                Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, rotate, Vector2.Zero, scale, SpriteEffects.None, 0);
         }
     }
 
