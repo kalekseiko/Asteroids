@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using AsteroidMono;
+
 
 namespace AsteroidMono
 {
@@ -15,12 +17,14 @@ namespace AsteroidMono
     {
         SplashScreen,
         Game,
-        Final,
+        GameOver,
         Pause
     }
 
+
     public class Game1 : Game
     {
+        
         GraphicsDeviceManager graphics; // основное устройство вывода графики - видеокарта
         SpriteBatch spriteBatch; // буфер для всех спрайтов
         States stat = States.SplashScreen;
@@ -28,6 +32,8 @@ namespace AsteroidMono
         // размеры игрового окна
         static int screenWidth;
         static int screenHeight;
+
+        static GameTime currentGameTime;
 
         static public int ScreenWidth
         {
@@ -44,12 +50,16 @@ namespace AsteroidMono
             }
         }
 
-
+        static public GameTime getCurrentGameTime
+        {
+            get { return currentGameTime; }
+        }
 
         public Game1()
         {
             screenWidth = 1680;
             screenHeight = 1050;
+            //gameTime = new GameTime();
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
@@ -78,17 +88,22 @@ namespace AsteroidMono
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             SplashScreen.Background = Content.Load<Texture2D>("img/SplashScreenImg2"); // картинка для заставки
             SplashScreen.HeaderFont = Content.Load<SpriteFont>("fonts/SplashScreenFont"); // шрифт для главных надписей
             SplashScreen.TextFont = Content.Load<SpriteFont>("fonts/TextFont"); // шрифт для остальных надписей
+            GameOver.Background = Content.Load<Texture2D>("img/GameOver"); // картинка для заставки
+            GameOver.HeaderFont = Content.Load<SpriteFont>("fonts/TextFont"); // шрифт для главных надписей
+            GameOver.TextFont = Content.Load<SpriteFont>("fonts/LittleFont"); // шрифт для остальных надписей
+            
             Asteroids.Init(spriteBatch, screenWidth, screenHeight);
             Background.Texture2D = Content.Load<Texture2D>("spriteMaps/Backgrounds");
             Star.Texture2D = Content.Load<Texture2D>("spriteMaps/SpriteMapStars");
             StarShip.Texture2D = Content.Load<Texture2D>("spriteMaps/spaceship");
-
-
-
+            SustainerEngine.Texture2D = Content.Load<Texture2D>("spriteMaps/JetStreamSprite");
+            BigFire.Texture2D = Content.Load<Texture2D>("spriteMaps/PlazmaBullet");
+            Asteroid.Texture2D = Content.Load<Texture2D>("spriteMaps/Asteroids");
+            Blast.Texture2D = Content.Load<Texture2D>("spriteMaps/blast");
             // TODO: use this.Content to load your game content here
         }
 
@@ -111,27 +126,49 @@ namespace AsteroidMono
             KeyboardState keyboardState = Keyboard.GetState();
             switch(stat)
             {
-                case States.SplashScreen:
-                    SplashScreen.Update();
-                    if (keyboardState.IsKeyDown(Keys.Space)) stat = States.Game;
-                    break;
                 case States.Game:
                     if (keyboardState.IsKeyDown(Keys.Escape)) stat = States.SplashScreen;
                     Asteroids.Update();
                     if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) Asteroids.StarShip1.Up();
                     if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) Asteroids.StarShip1.Down();
-                    if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A)) Asteroids.StarShip1.Left();
+                    if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A)) 
+                    {
+                        Asteroids.StarShip1.Left();
+                        Asteroids.SustainerEngine1.isOn = false;
+                    }
                     if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D)) Asteroids.StarShip1.Right();
+                    if (keyboardState.IsKeyDown(Keys.Space)) Asteroids.Shoot();
+                    if (keyboardState.IsKeyUp(Keys.Space)) Asteroids.fireTimerCounter = 0;
+
+                    if (Asteroids.StarShip1.Strength < 1 ) {
+                        stat=States.GameOver;
+                    }
                     break;
+                case States.SplashScreen:
+                    SplashScreen.Update();
+                    if (keyboardState.IsKeyDown(Keys.Space)) 
+                        {
+                            stat = States.Game;
+                        }
+                    break;
+                case States.GameOver:
+                    GameOver.Update();
+                    if (keyboardState.IsKeyDown(Keys.Space)) 
+                        {
+                            Asteroids.StarShip1.Strength = 100;
+                            stat = States.Game;
+                        }
+                    break;
+                    
+                
             }
 
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed )
                 Exit();
 
-            
-
             base.Update(gameTime);
+            currentGameTime = gameTime;
         }
 
         /// <summary>
@@ -150,12 +187,12 @@ namespace AsteroidMono
                 case States.Game:
                     Asteroids.Draw();
                     break;
+                case States.GameOver:
+                    GameOver.Draw(spriteBatch);
+                    Asteroids.Reset();
+                    break;
             }
 
-
-            
-            //spriteBatch.Draw(mainMenu, new Vector2(0, 0), Color.White); // способ добавления картинки если картинка в точности совпвдвет с размером окна
-            //spriteBatch.Draw(mainMenu, new Rectangle(0, 0, screenWidth, 1050), Color.White); // подгоняем картинку под размер окна
             spriteBatch.End();
 
             base.Draw(gameTime);

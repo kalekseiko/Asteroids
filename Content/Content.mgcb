@@ -20,6 +20,13 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/File.spritefont;fonts/SplashScreenFont
 
+#begin fonts/LittleFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/LittleFont.spritefont;fonts/LittleFont
+
 #begin fonts/TextFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -51,6 +58,18 @@
 /processorParam:TextureFormat=Color
 /build:img/AsteroidsMainMenu2.jpg;img/SplashScreenImg2
 
+#begin img/GameOver.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:img/GameOver.jpg;img/GameOver
+
 #begin spriteMaps/1Star.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -63,6 +82,18 @@
 /processorParam:TextureFormat=Color
 /build:spriteMaps/1Star.png;spriteMaps/starImg
 
+#begin spriteMaps/Asteroids.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spriteMaps/Asteroids.png;spriteMaps/Asteroids
+
 #begin spriteMaps/Backgrounds.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -74,6 +105,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:spriteMaps/Backgrounds.png;spriteMaps/Backgrounds
+
+#begin spriteMaps/blast.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spriteMaps/blast.png;spriteMaps/blast
+
+#begin spriteMaps/JetStreamSprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spriteMaps/JetStreamSprite.png;spriteMaps/JetStreamSprite
+
+#begin spriteMaps/Plazma_bullet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spriteMaps/Plazma_bullet.png;spriteMaps/PlazmaBullet
 
 #begin spriteMaps/spaceship.png
 /importer:TextureImporter

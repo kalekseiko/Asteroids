@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/fonts/File.spritefont</SourceFile>
+  <SourceFile>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/fonts/File.spritefont</SourceFile>
   <SourceTime>2020-04-23T10:13:17.7173417+04:00</SourceTime>
-  <DestFile>D:/geekBrains/C#2/AsteroidMono/AsteroidMono/Content/bin/Windows/fonts/SplashScreenFont.xnb</DestFile>
-  <DestTime>2020-04-23T10:13:22.6172163+04:00</DestTime>
+  <DestFile>D:/geekBrains/C#2/AsteroidMono/Asteroids/Content/bin/Windows/fonts/SplashScreenFont.xnb</DestFile>
+  <DestTime>2020-04-27T11:36:04.7669204+04:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2018-12-08T20:35:54+04:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
