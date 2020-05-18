@@ -10,6 +10,7 @@ namespace AsteroidMono
     {
         public static int screenWidth;
         public static int screenHeight;
+        public static int elapsedGameTime; // количество милисекунд на 1 игровой цикл
         static public SpriteBatch SpriteBatch { get; set; }
         public static Random rnd = new Random();
 
@@ -29,12 +30,20 @@ namespace AsteroidMono
 
         static public Blast blast;
 
+
+        static public int ElapsedGameTime 
+        {
+            get {return  elapsedGameTime; }
+        }
+
         // инициализация
         static public void Init (SpriteBatch SpriteBatch, int Width, int Height)
         {
             Asteroids.screenWidth = (Width > 100) ? Width : Game1.ScreenWidth;
             Asteroids.screenHeight = (Height > 100) ? Height : Game1.ScreenHeight;
             Asteroids.SpriteBatch = SpriteBatch;
+
+            elapsedGameTime = 0;
             
             backgrounds = new Background[3];
             currentBackground = rnd.Next(0, backgrounds.Length);
@@ -99,6 +108,8 @@ namespace AsteroidMono
         // обновление состояния игровых объектов
         static public void Update()
         {
+            elapsedGameTimeUpdate();
+
             if (backgrounds[currentBackground].ChangeSprite )
             {
                 currentBackground = rnd.Next(0, backgrounds.Length);
@@ -188,6 +199,12 @@ namespace AsteroidMono
             fireTimerCounter++;
                 if (fireTimerCounter == 1 )
                     firesList.Add(new BigFire(StarShip1.GetPos, new Vector2(0, 0), 0, 0, 30));
+        }
+        // обновляем параметр миллисекуд на цикл
+        static public void elapsedGameTimeUpdate() 
+        {
+            if (Game1.getCurrentGameTime != null )
+                elapsedGameTime = Game1.getCurrentGameTime.ElapsedGameTime.Milliseconds;
         }
     }
 
@@ -446,8 +463,13 @@ namespace AsteroidMono
     {
         public static Texture2D Texture2D { get; set; }
 
-        public bool isOn;
+        public bool isOn {get; set;}
+        bool IsIgnition;
 
+        // Для ограничения скорости анимации
+        int currentTime; // сколько времени прошло
+        int period; // период обновления в миллисекундах
+       
         public SustainerEngine(Vector2 pos, Vector2 dir, int spriteX, int spriteY)
             :base (pos, dir, spriteX, spriteY)
         {
@@ -456,6 +478,9 @@ namespace AsteroidMono
             currentFrame.X = spriteX;
             currentFrame.Y = spriteY;
             isOn = true;
+            IsIgnition = true;
+            currentTime = 0;
+            period = 50;
         }
         public void SetPos(Vector2 pos)
         {
@@ -465,12 +490,33 @@ namespace AsteroidMono
 
         public override void Update()
         {
-            if (currentFrame.Y < 4)
-                currentFrame.Y++;
-            else
-                currentFrame.Y = 0;
+            currentTime += Asteroids.elapsedGameTime;
 
-            isOn = true;
+            if (currentTime > period) 
+            {
+                currentTime -= period;
+                if (IsIgnition) 
+                {
+                    currentFrame.X = 1;
+                } else 
+                {
+                    currentFrame.X = 0;
+                }
+
+                if (currentFrame.Y < 4)
+                {
+                    currentFrame.Y++;
+                }
+                else
+                {
+                    currentFrame.Y = 0;
+                    IsIgnition = false;
+                }
+
+                if (!isOn) IsIgnition = true;
+
+                isOn = true;
+            }
         }
 
         public override void Draw()

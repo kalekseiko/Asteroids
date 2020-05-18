@@ -24,6 +24,7 @@ namespace AsteroidMono
 
     public class Game1 : Game
     {
+        
         GraphicsDeviceManager graphics; // основное устройство вывода графики - видеокарта
         SpriteBatch spriteBatch; // буфер для всех спрайтов
         States stat = States.SplashScreen;
@@ -31,6 +32,8 @@ namespace AsteroidMono
         // размеры игрового окна
         static int screenWidth;
         static int screenHeight;
+
+        static GameTime currentGameTime;
 
         static public int ScreenWidth
         {
@@ -47,10 +50,16 @@ namespace AsteroidMono
             }
         }
 
+        static public GameTime getCurrentGameTime
+        {
+            get { return currentGameTime; }
+        }
+
         public Game1()
         {
             screenWidth = 1680;
             screenHeight = 1050;
+            //gameTime = new GameTime();
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
@@ -159,6 +168,7 @@ namespace AsteroidMono
                 Exit();
 
             base.Update(gameTime);
+            currentGameTime = gameTime;
         }
 
         /// <summary>
@@ -182,7 +192,6 @@ namespace AsteroidMono
                     Asteroids.Reset();
                     break;
             }
-            
 
             spriteBatch.End();
 
