@@ -722,6 +722,37 @@ namespace AsteroidMono
         
     }
 
+    class ComplexAsteroid : BasedObject
+    {
+        int speed; // скоростиь полета астероида
+
+        public static Texture2D Texture2D { get; set; }
+
+        public ComplexAsteroid(Vector2 pos, Vector2 dir, int spriteX, int spriteY, int speed)
+            : base(pos, dir, spriteX, spriteY)
+        {
+            this.speed = speed;
+            Dir.X = speed;
+            frameWidth = 64;
+            frameHeight = 64;
+            size.W = frameWidth - sizeCoef;
+            size.H = frameHeight - sizeCoef;
+            currentFrame.X = spriteX;
+            currentFrame.Y = spriteY;
+        }
+
+        public override void Update()
+        {
+        }
+
+
+        public override void Draw()
+        {
+            Asteroids.SpriteBatch.Draw(Texture2D, Pos, new Rectangle(currentFrame.X * frameWidth, currentFrame.Y * frameHeight, frameWidth, frameHeight), color, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+        }
+
+    }
+
     class Blast: BasedObject
     {
 
