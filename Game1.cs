@@ -57,8 +57,8 @@ namespace AsteroidMono
 
         public Game1()
         {
-            screenWidth = 1680;
-            screenHeight = 1050;
+            screenWidth = 1600;
+            screenHeight = 900;
             //gameTime = new GameTime();
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
